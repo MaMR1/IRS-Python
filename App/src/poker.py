@@ -1,12 +1,11 @@
 # Bibliothèques standard
-...
+import os
 
 # Modules Personnels
 import cartes as X1
 import joueurs as X2
 
 NB_MAX = 6
-
 
 def distribution_cartes(joueurs, paquet):
 
@@ -24,7 +23,7 @@ def tour(joueurs):
 
     for joueur in joueurs:
         if joueur.in_game:
-            action = int(input(f"{joueur.name} : (1) se coucher\t (2) suivre\t (3) miser : "))
+            action = int(input(f"\n----{joueur}---- \n (1) se coucher\n (2) suivre\n (3) miser : "))
            
             choix = 1
             while choix:
@@ -44,6 +43,13 @@ def tour(joueurs):
                         print("Action invalide. Essayez à nouveau.")
     
     return pot
+
+def lancer_partie():
+    while 1:
+        a = input("Prêts à lancer la partie ? ( Oui ) : ").lower()
+        if a == "oui":
+            return os.system('cls')
+
 
 # MAIN FUNCTION
 def main():
@@ -72,6 +78,10 @@ def main():
 
     'Commenter cette ligne pour une vraie utilisation'
     X2.afficher_joueurs(liste_des_joueurs)
+
+    # Partie
+    lancer_partie()
+    tour(liste_des_joueurs)
 
     
 # MAIN GUARD
