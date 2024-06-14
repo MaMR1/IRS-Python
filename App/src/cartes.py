@@ -15,8 +15,8 @@ class Carte:
         return f"{self.number} \\ {self.color}"
 
 def generer_paquet():
-    couleurs = ['Coeur', 'Carreau'] #, 'Trèfle', 'Pique'
-    valeurs = ['2', '3', '4', '5']  #, '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi', 'As'
+    couleurs = ['Coeur', 'Carreau', 'Trèfle', 'Pique']
+    valeurs = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi', 'As']
     paquet = [Carte(i, j) for i in couleurs for j in valeurs]
     return paquet
 
