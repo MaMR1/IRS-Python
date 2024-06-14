@@ -21,14 +21,14 @@ def distribution_cartes(joueurs, paquet, cartes_table):
 
         nb_distribue += 2       # Nécessaire pour connaitre le nb distribué
 
+    print("\nBalise : cartes sur la table | distribution_cartes")
     for j in range(0,5):        # Enregistre dans une liste les 5 cartes au centre de la table
         cartes_table.append(paquet[nb_distribue+j])
         print(f"Carte {j} : {cartes_table[j]}")
     
-
 def lancer_partie():
     while 1:
-        a = input("Prêts à lancer la partie ? ( Oui ) : ").lower()
+        a = input("\n\tPrêts à lancer la partie ? ( Oui ) : ").lower()
         if a == "oui":
             return os.system('cls')
         
@@ -39,9 +39,7 @@ def tour(joueurs):
 
     fin_de_tour = 0
     while not fin_de_tour:  # On sort lorsque tous les joueurs sont à jour dans leur mises
-    
         for joueur in joueurs:              # En premier temps chaque joueur agit
-
             if joueur.in_game:
                            
                 while True:                 # Permet de recommencer si le choix est invalide
@@ -67,38 +65,13 @@ def tour(joueurs):
 
                         case _:
                             print("Action invalide. Essayez à nouveau.")
-                # Fin while
-        # Fin for
-    
-    """
-    # Aide : Nécessaire pour débloquer 
-    # Ceci étant, cela posera probleme lors des "All-in" avec des montants différents
-    for joueur in joueurs:  
-        joueur.mise = 0
-    """
-
-    return pot
-
-def gagnant(joueurs, cartes_table):
-    print(f"\n-------Rappel : les cartes du centre-------\n")
-    meilleur_joueur = None
-    meilleure_valeur = 0
-
-    for joueur in joueurs:
-        valeur_combinaison = X3.verifier_combinaisons(joueur, cartes_table)
-
-        if valeur_combinaison > meilleure_valeur:
-                meilleur_joueur = joueur
-                meilleure_valeur = valeur_combinaison
-
-    return meilleur_joueur
-
+                            continue
+        return pot
 
 # MAIN FUNCTION
 def main():
     cartes_au_centre = []
-
-    print(" BIENVENUE au Poker ! ")
+    print(r" <<<<< BIENVENUE au Poker ! >>>>> ")
 
     # Choix du nombre de joueurs
     nombre_de_joueurs = NB_MAX+1
@@ -113,47 +86,49 @@ def main():
     print ("\n----Création des joueurs----")
     X2.afficher_joueurs(liste_des_joueurs)
 
-    print("\n----Génération du paquet de cartes melange----")
+    print("\n----Génération du paquet de cartes----")
     paquet = X1.generer_paquet()
-    paquet = X1.melanger_paquet(paquet)
     X1.afficher_paquet(paquet)
-
-    print("\n----Distribution des cartes----")
-    distribution_cartes(liste_des_joueurs, paquet, cartes_au_centre)
-
-    'Commenter cette ligne pour lors d_une vraie utilisation'
-    X2.afficher_joueurs(liste_des_joueurs)
-
+    print(f"\n\tLe paquet comporte : {len(paquet)} cartes")
+ 
     # Partie
     while(True):
         lancer_partie()
         pot = int(0)
+        print("\n----Distribution des cartes----")
+        paquet = X1.melanger_paquet(paquet)
+        distribution_cartes(liste_des_joueurs, paquet, cartes_au_centre)
+
+        'Commenter cette ligne pour lors d_une vraie utilisation'
+        X2.afficher_joueurs(liste_des_joueurs)
+        
         for round in range(0,4):
             print(f"\n-------Tour N°{round+1}-------")
 
             match round:
                 case 0:
-                    pot = tour(liste_des_joueurs)
+                    pot += tour(liste_des_joueurs)
                 case 1:
                     print(f" {cartes_au_centre[0]}   {cartes_au_centre[1]}   {cartes_au_centre[2]}")
-                    pot = tour(liste_des_joueurs)
+                    pot += tour(liste_des_joueurs)
                 case 2:
                     print(f" {cartes_au_centre[0]}   {cartes_au_centre[1]}   {cartes_au_centre[2]}   {cartes_au_centre[3]}")
-                    pot = tour(liste_des_joueurs)
+                    pot += tour(liste_des_joueurs)
                 case 3:
                     print(f" {cartes_au_centre[0]}   {cartes_au_centre[1]}   {cartes_au_centre[2]}   {cartes_au_centre[3]}   {cartes_au_centre[3]}")
-                    pot = tour(liste_des_joueurs)
+                    pot += tour(liste_des_joueurs)
 
             # Remise à zéro des mises pour les prochains tours
             for joueur in liste_des_joueurs:
                 joueur.mise = 0
 
         # Trouver le gagnant, à qui on incrémente l'argent
-        gagnant_manche = X3.determiner_gagnant(liste_des_joueurs,cartes_au_centre)
-        print(f"{gagnant_manche}")
+        gagnant_manche, combinaison = X3.trouver_gagnant(liste_des_joueurs,cartes_au_centre)
+
+        #for gagnant in gagnant_manche:
+        print(f"\nVoici qui à remporter la manche : {gagnant_manche.name} avec la main {combinaison[1]}")
         gagnant_manche.money += pot
 
-    
 # MAIN GUARD
 if __name__ == "__main__":
     main()
