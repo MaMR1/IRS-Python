@@ -2,8 +2,7 @@
 from collections import Counter
 
 # Modules Personnels
-import cartes as X1
-import joueurs as X2
+...
 
 def haute_main(valeur):
     valeurs = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi', 'As']
@@ -41,36 +40,28 @@ def is_carre(ensemble_cartes):
     compteur = Counter(valeurs)
     return max(compteur.values()) == 4
 
+# Fonction qui permet de relever les combinaisons des joueurs en synergie avec la fonction suivante
+def evaluer_main(joueur, cartes_table):
+    total_cartes = cartes_table + [joueur.card_1, joueur.card_2]
+    if is_carre(total_cartes):
+        return 7, 'Carré'
+    elif is_brelan(total_cartes) and is_paire(total_cartes):
+        return 6, 'Full'
+    elif is_couleur(total_cartes):
+        return 5, 'Couleur'
+    elif is_suite(total_cartes):
+        return 4, 'Suite'
+    elif is_brelan(total_cartes):
+        return 3, 'Brelan'
+    elif is_deux_paires(total_cartes):
+        return 2, 'Deux Paires'
+    elif is_paire(total_cartes):
+        return 1, 'Paire'
+    else:
+        return 0, max(total_cartes, key=lambda carte: haute_main(carte.number)).number
 
-def verifier_combinaisons(joueur, cartes_sur_table):
-    all_cartes = cartes_sur_table + [joueur.card_1, joueur.card_2]
-    # Classement des combinaisons par ordre de priorité
-    combinaisons = [
-        ('carre', is_carre(all_cartes), 6),
-        ('couleur', is_couleur(all_cartes), 5),
-        ('suite', is_suite(all_cartes), 4),
-        ('brelan', is_brelan(all_cartes), 3),
-        ('deux_paires', is_deux_paires(all_cartes), 2),
-        ('paire', is_paire(all_cartes), 1),
-        ('haute_carte', True, 0)                # Par défaut, on aura 'haute carte'
-    ]
+def trouver_gagnant(joueurs, cartes_table):
+    mains = [(joueur, evaluer_main(joueur, cartes_table)) for joueur in joueurs if joueur.in_game]
+    gagnant = max(mains, key=lambda x: x[1])
+    return gagnant[0], gagnant[1]
 
-    for meilleure_combi, presente, valeur in combinaisons:
-        if presente:
-            return meilleure_combi, valeur
-
-def determiner_gagnant(joueurs, cartes_sur_table):
-    meilleurs_joueurs = []
-    meilleure_valeur = 0
-
-    for joueur in joueurs:
-        combinaison, valeur_combinaison = verifier_combinaisons(joueur, cartes_sur_table)
-        
-        if valeur_combinaison > meilleure_valeur:
-            meilleurs_joueurs = [joueur]
-            meilleure_combinaison = combinaison
-            meilleure_valeur = valeur_combinaison
-        elif valeur_combinaison == meilleure_valeur:
-            meilleurs_joueurs.append(joueur)
-
-    return meilleurs_joueurs, meilleure_combinaison
