@@ -43,5 +43,5 @@
 ### Mode Tkinter
 #### Version alpha+ en place, finalisation nécessaire.
 
-#####*By Martin, Have fun*
-*
+*By Martin, Have fun*
+
