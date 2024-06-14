@@ -44,7 +44,9 @@ def main():
             case 3:
                 loop = 0
                 print("Vous avez choisi le mode Tkinter")
-                terminal_instance = GraphicApplication()
+                GUI_instance = GraphicApplication()
+                GUI_instance.mainloop()
+
                 pass
 
             #Default == non reconnu
