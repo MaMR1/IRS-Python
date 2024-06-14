@@ -7,12 +7,12 @@ import random
 
 # La classe pour créer une carte avec les attributs de couleur et de numéro
 class Carte:
-    def __init__(self, color, number):
-        self.color = color
+    def __init__(self, couleur, number):
+        self.couleur = couleur
         self.number = number
 
     def __str__(self):
-        return f"{self.number} \\ {self.color}"
+        return f"{self.number} \\ {self.couleur}"
 
 def generer_paquet():
     couleurs = ['Coeur', 'Carreau', 'Trèfle', 'Pique']
